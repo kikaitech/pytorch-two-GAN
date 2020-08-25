@@ -38,14 +38,16 @@ class TestModel():
     def test(self):
         self.real_A = Variable(self.input_A)
         self.fake_B = self.netG(self.real_A)
+
         torch.jit.trace(self.seg_netG, (self.real_A)).save('./seg_netG_realA.pt')
 
         fake_B = (self.fake_B + 1.0)/2.0
         input_A = (self.real_A + 1.0)/2.0
         self.fake_C = (fake_B * input_A) * 2.0 - 1
-     
         self.fake_D = self.detec_netG(self.fake_C)
+
         torch.jit.trace(self.detec_netG, (self.fake_C)).save('./detec_netG_fake_C.pt')
+        
     # get image paths
     def get_image_paths(self):
         return self.image_paths
